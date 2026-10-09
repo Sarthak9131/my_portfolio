@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="The portfolio of Sarthak Singh — MCA graduate, developer, and IEEE conference paper author."
+    />
+    <meta name="theme-color" content="#f7f8fc" />
+    <title>Sarthak Singh | Developer Portfolio</title>
+    <script>
+      tailwind = {
+        config: {
+          darkMode: "class",
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+              },
+              colors: {
+                ink: "#182230",
+                accent: "#6258e8",
+                mint: "#a8f0d2",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+      }
+
+      :root.dark {
+        color-scheme: dark;
+      }
+
+      body {
+        font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .mono {
+        font-family: "DM Mono", ui-monospace, monospace;
+      }
+
+      .grid-paper {
+        background-image: linear-gradient(
+            to right,
+            rgb(98 88 232 / 0.055) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgb(98 88 232 / 0.055) 1px,
+            transparent 1px
+          );
+        background-size: 34px 34px;
+        mask-image: linear-gradient(to bottom, black, transparent 88%);
+      }
+
+      .dark .grid-paper {
+        background-image: linear-gradient(
+            to right,
+            rgb(168 240 210 / 0.07) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgb(168 240 210 / 0.07) 1px,
+            transparent 1px
+          );
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 650ms ease,
+          transform 650ms ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .project-card {
+        transition:
+          transform 220ms ease,
+          box-shadow 220ms ease,
+          border-color 220ms ease;
+      }
+
+      .project-card:hover {
+        transform: translateY(-5px);
+      }
+
+      #mobile-preview-stage {
+        display: none;
+      }
+
+      body.previewing {
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      body.previewing #portfolio-content {
+        display: none;
+      }
+
+      body.previewing #mobile-preview-stage {
+        position: fixed;
+        inset: 56px 0 0;
+        z-index: 55;
+        display: flex;
+        justify-content: center;
+        overflow: auto;
+        padding: 16px;
+        background: #e9eaf0;
+      }
+
+      .dark body.previewing #mobile-preview-stage {
+        background: #090a10;
+      }
+
+      #mobile-preview-frame {
+        width: min(100%, 390px);
+        height: 100%;
+        min-height: 540px;
+        border: 0;
+        border-radius: 20px;
+        background: #f7f8fc;
+        box-shadow: 0 18px 55px rgb(15 23 42 / 0.2);
+      }
+
+      body.preview-frame {
+        min-height: 100%;
+      }
+
+      body.preview-frame #preview-toolbar,
+      body.preview-frame #mobile-preview-stage {
+        display: none !important;
+      }
+
+      body.preview-frame header {
+        top: 0;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+    <script>
+      try {
+        if (
+          localStorage.getItem("sarthak-portfolio-theme") === "dark" ||
+          (!localStorage.getItem("sarthak-portfolio-theme") &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        }
+      } catch {
+        // The page still works when browser storage is unavailable.
+      }
+    </script>
+  </head>
+  <body
+    class="bg-[#f7f8fc] text-ink antialiased transition-colors duration-300 dark:bg-[#11131b] dark:text-[#edf0f7]"
+  >
+    <div
+      id="preview-toolbar"
+      class="sticky top-0 z-[70] flex h-14 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur dark:border-white/10 dark:bg-[#171923]/95 sm:px-8"
+    >
+      <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Portfolio preview</span>
+      <div class="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-100 p-1 dark:border-white/10 dark:bg-white/5" role="group" aria-label="Preview size">
+        <button
+          id="desktop-preview-button"
+          type="button"
+          class="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white transition"
+          aria-pressed="true"
+        >
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" /><path stroke-linecap="round" d="M8 21h8m-4-4v4" /></svg>
+          Desktop
+        </button>
+        <button
+          id="mobile-preview-button"
+          type="button"
+          class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:text-accent dark:text-slate-300 dark:hover:text-mint"
+          aria-pressed="false"
+        >
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2" /><path stroke-linecap="round" d="M11 18.5h2" /></svg>
+          Mobile
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-preview-stage" aria-label="Mobile portfolio preview">
+      <iframe id="mobile-preview-frame" title="Sarthak Singh portfolio in mobile layout"></iframe>
+    </div>
+
+    <div id="portfolio-content">
+    <a
+      href="#main"
+      class="sr-only z-50 rounded-lg bg-accent px-4 py-3 text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >Skip to content</a
+    >
+    <div
+      id="reading-progress"
+      class="fixed left-0 top-0 z-[60] h-[3px] w-0 bg-accent transition-[width] duration-100 dark:bg-mint"
+      aria-hidden="true"
+    ></div>
+
+    <header
+      class="sticky top-14 z-50 border-b border-slate-200/70 bg-[#f7f8fc]/85 backdrop-blur-xl dark:border-white/10 dark:bg-[#11131b]/85"
+    >
+      <nav
+        class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8"
+        aria-label="Main navigation"
+      >
+        <a href="#home" class="flex items-center gap-2.5" aria-label="Sarthak Singh, home">
+          <span
+            class="grid h-9 w-9 place-items-center rounded-xl bg-accent text-sm font-extrabold tracking-tight text-white"
+            >S.</span
+          >
+          <span class="text-sm font-bold tracking-tight">Sarthak Singh</span>
+        </a>
+
+        <div class="hidden items-center gap-7 md:flex">
+          <a class="nav-link text-sm text-slate-600 transition hover:text-accent dark:text-slate-300 dark:hover:text-mint" href="#about">About</a>
+          <a class="nav-link text-sm text-slate-600 transition hover:text-accent dark:text-slate-300 dark:hover:text-mint" href="#experience">Experience</a>
+          <a class="nav-link text-sm text-slate-600 transition hover:text-accent dark:text-slate-300 dark:hover:text-mint" href="#projects">Projects</a>
+          <a class="nav-link text-sm text-slate-600 transition hover:text-accent dark:text-slate-300 dark:hover:text-mint" href="#research">Research</a>
+          <a class="nav-link text-sm text-slate-600 transition hover:text-accent dark:text-slate-300 dark:hover:text-mint" href="#contact">Contact</a>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="theme-toggle"
+            type="button"
+            class="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-700 transition hover:border-accent hover:text-accent dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:border-mint dark:hover:text-mint"
+            aria-label="Switch to dark theme"
+            title="Toggle color theme"
+          >
+            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+            </svg>
+          </button>
+          <button
+            id="menu-toggle"
+            type="button"
+            class="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200 md:hidden"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+      <div id="mobile-menu" class="hidden border-t border-slate-200/70 px-5 py-3 dark:border-white/10 md:hidden">
+        <div class="mx-auto flex max-w-6xl flex-col">
+          <a class="mobile-link rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5" href="#about">About</a>
+          <a class="mobile-link rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5" href="#experience">Experience</a>
+          <a class="mobile-link rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5" href="#projects">Projects</a>
+          <a class="mobile-link rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5" href="#research">Research</a>
+          <a class="mobile-link rounded-lg px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5" href="#contact">Contact</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="home" class="relative isolate overflow-hidden">
+        <div class="grid-paper absolute inset-0 -z-10" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -right-32 top-16 -z-10 h-80 w-80 rounded-full bg-violet-300/20 blur-3xl dark:bg-violet-500/10" aria-hidden="true"></div>
+        <div class="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-24 pt-20 sm:px-8 sm:pb-32 sm:pt-28 lg:grid-cols-[1.3fr_0.7fr] lg:gap-20">
+          <div class="reveal">
+            <p class="mono mb-6 flex items-center gap-2 text-xs uppercase tracking-[0.19em] text-accent dark:text-mint">
+              <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+              Software · technology · ideas
+            </p>
+            <h1 class="max-w-3xl text-5xl font-extrabold leading-[1.06] tracking-[-0.055em] sm:text-7xl">
+              Building with<br />
+              <span class="bg-gradient-to-r from-accent via-[#846de9] to-[#32aa8c] bg-clip-text text-transparent dark:from-mint dark:via-[#a4cafa] dark:to-[#c5b3ff]">curiosity &amp; code.</span>
+            </h1>
+            <p class="mt-7 max-w-xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
+              Hi, I’m <strong class="font-semibold text-ink dark:text-white">Sarthak Singh</strong> — an MCA graduate who enjoys turning ideas into useful software and exploring what technology can do.
+            </p>
+            <div class="mt-9 flex flex-wrap gap-3">
+              <a href="#projects" class="inline-flex items-center gap-2 rounded-xl bg-[#5147d3] px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-accent/20 transition hover:-translate-y-0.5 hover:bg-[#453bbf]">
+                Explore my work
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M7 7h10v10" /></svg>
+              </a>
+              <a href="../Sarthak_JAVA_Dev.pdf" download class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-5 py-3.5 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-accent hover:text-accent dark:border-white/15 dark:bg-white/5 dark:text-slate-200 dark:hover:border-mint dark:hover:text-mint">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" /></svg>
+                Download résumé
+              </a>
+            </div>
+            <div class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-500 dark:text-slate-400">
+              <a href="https://github.com/Sarthak9131" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 transition hover:text-accent dark:hover:text-mint">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.54v-2.08c-3.09.67-3.74-1.31-3.74-1.31-.5-1.28-1.23-1.62-1.23-1.62-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 1.7 2.62 1.21 3.26.92.1-.72.39-1.21.71-1.49-2.47-.28-5.07-1.24-5.07-5.5 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.06 1.14a10.63 10.63 0 0 1 5.57 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.53.23 2.67.12 2.95.72.78 1.14 1.77 1.14 2.99 0 4.27-2.6 5.21-5.08 5.49.4.35.76 1.02.76 2.06v3.06c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z" /></svg>
+                GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/sarthak-singh-202a97264/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 transition hover:text-accent dark:hover:text-mint">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 3.55A2.1 2.1 0 0 0 18.95 3H5.05a2.1 2.1 0 0 0-2.1 2.05v13.9A2.1 2.1 0 0 0 5.05 21h13.9a2.1 2.1 0 0 0 2.1-2.05V5.05a2.1 2.1 0 0 0-.6-1.5ZM8.34 18.1H5.68V9.5h2.66v8.6ZM7.01 8.33a1.54 1.54 0 1 1 .02-3.08 1.54 1.54 0 0 1-.02 3.08Zm11.3 9.77h-2.65v-4.18c0-1-.02-2.29-1.4-2.29-1.4 0-1.61 1.09-1.61 2.22v4.25H10V9.5h2.54v1.18h.04a2.79 2.79 0 0 1 2.5-1.37c2.68 0 3.18 1.76 3.18 4.05v4.74Z" /></svg>
+                LinkedIn
+              </a>
+              <span class="inline-flex items-center gap-2"><span aria-hidden="true">⌖</span> Amity University · Noida</span>
+            </div>
+          </div>
+
+          <div class="reveal mx-auto w-full max-w-sm" style="transition-delay: 120ms">
+            <div class="relative rounded-[2rem] border border-white/80 bg-white/75 p-5 shadow-[0_24px_80px_-28px_rgba(61,66,111,0.28)] backdrop-blur dark:border-white/10 dark:bg-white/[0.04] dark:shadow-black/30">
+              <div class="absolute -right-3 -top-3 grid h-14 w-14 place-items-center rounded-2xl bg-mint text-xl shadow-lg shadow-emerald-900/10 dark:bg-[#252d37]">
+                <span aria-hidden="true">✳</span>
+              </div>
+              <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#dcd9ff] via-[#edebfb] to-[#c8f2e2] p-7 dark:from-[#313044] dark:via-[#252737] dark:to-[#243b36]">
+                <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full border border-white/60 dark:border-white/10" aria-hidden="true"></div>
+                <div class="absolute -right-3 -top-3 h-40 w-40 rounded-full border border-white/60 dark:border-white/10" aria-hidden="true"></div>
+                <p class="mono text-xs uppercase tracking-[0.17em] text-slate-600 dark:text-slate-300">A little about me</p>
+                <div class="mt-12 grid h-24 w-24 place-items-center rounded-[1.7rem] bg-accent text-3xl font-extrabold tracking-tight text-white shadow-xl shadow-accent/25">SS</div>
+                <h2 class="mt-6 text-2xl font-bold tracking-tight">Sarthak Singh</h2>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">MCA graduate · Developer · Curious mind</p>
+                <div class="mt-8 flex items-end justify-between border-t border-slate-900/10 pt-4 dark:border-white/10">
+                  <div>
+                    <p class="mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">Master of Computer Applications</p>
+                    <p class="mt-1 text-sm font-semibold">Amity University, Noida</p>
+                  </div>
+                  <span class="mono rounded-lg bg-white/70 px-2.5 py-1.5 text-xs font-medium text-accent dark:bg-white/10 dark:text-mint">8.21 CGPA</span>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center justify-between px-1 text-xs text-slate-500 dark:text-slate-400">
+                <span class="mono">JAVA · PYTHON · IDEAS</span>
+                <span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Always learning</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="scroll-mt-24 border-t border-slate-200/70 bg-white/55 py-20 dark:border-white/10 dark:bg-white/[0.02] sm:py-24">
+        <div class="mx-auto max-w-6xl px-5 sm:px-8">
+          <div class="reveal grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+            <div>
+              <p class="mono text-xs uppercase tracking-[0.18em] text-accent dark:text-mint">01 / A quick introduction</p>
+              <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Curious by nature.<br />Developer by choice.</h2>
+            </div>
+            <div>
+              <p class="text-lg leading-8 text-slate-600 dark:text-slate-300">
+                I’ve completed my Master of Computer Applications graduate from <strong class="font-semibold text-ink dark:text-white">Amity University, Noida</strong>, with an interest in building practical software and learning how emerging technologies can solve real-world problems.
+              </p>
+              <p class="mt-4 leading-7 text-slate-600 dark:text-slate-300">
+                My experience spans Java and Python development, web technologies, databases, and introductory work in AI and machine learning. I enjoy collaborating with people just as much as I enjoy getting behind the wheel or playing a game of football.
+              </p>
+              <div class="mt-8 flex flex-wrap gap-2">
+                <span class="rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200">Problem solving</span>
+                <span class="rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200">Team collaboration</span>
+                <span class="rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200">Continuous learning</span>
+                <span class="rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200">Football &amp; driving</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-white/10 dark:bg-white/[0.035]">
+              <p class="mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Education</p>
+              <p class="mt-3 font-semibold">MCA</p>
+              <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Amity University, Noida</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-white/10 dark:bg-white/[0.035]">
+              <p class="mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Academic score</p>
+              <p class="mt-3 font-semibold">8.21 CGPA</p>
+              <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Master of Computer Applications</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-white/10 dark:bg-white/[0.035]">
+              <p class="mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Internship</p>
+              <p class="mt-3 font-semibold">GBTL</p>
+              <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Bhiwani, Haryana</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-white/10 dark:bg-white/[0.035]">
+              <p class="mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Published research</p>
+              <p class="mt-3 font-semibold">IEEE conference paper</p>
+              <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">IoT &amp; smart environments</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="experience" class="scroll-mt-24 py-20 sm:py-24">
+        <div class="mx-auto max-w-6xl px-5 sm:px-8">
+          <div class="reveal">
+            <p class="mono text-xs uppercase tracking-[0.18em] text-accent dark:text-mint">02 / Where I’ve learned</p>
+            <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Experience &amp; involvement</h2>
+          </div>
+          <div class="mt-10 grid gap-5 lg:grid-cols-2">
+            <article class="reveal rounded-3xl border border-slate-200/80 bg-white p-7 dark:border-white/10 dark:bg-white/[0.035] sm:p-8">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="mono text-xs uppercase tracking-wider text-accent dark:text-mint">Internship</p>
+                  <h3 class="mt-3 text-xl font-bold">GBTL</h3>
+                  <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Bhiwani, Haryana</p>
+                </div>
+                <span class="rounded-full bg-violet-50 px-3 py-1.5 text-xs font-medium text-accent dark:bg-violet-400/10 dark:text-violet-200">SAP</span>
+              </div>
+              <p class="mt-6 leading-7 text-slate-600 dark:text-slate-300">
+                Gained hands-on exposure to SAP software during my internship. SAP is enterprise software that helps organizations integrate and manage business processes—such as finance, procurement, supply chain, and operations—in one system.
+              </p>
+            </article>
+            <article class="reveal rounded-3xl border border-slate-200/80 bg-white p-7 dark:border-white/10 dark:bg-white/[0.035] sm:p-8" style="transition-delay: 100ms">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="mono text-xs uppercase tracking-wider text-accent dark:text-mint">Leadership &amp; community</p>
+                  <h3 class="mt-3 text-xl font-bold">Student Coordinator</h3>
+                  <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">AURA Fest · Amity University</p>
+                </div>
+                <span class="grid h-11 w-11 place-items-center rounded-xl bg-orange-50 text-xl dark:bg-orange-400/10" aria-hidden="true">✦</span>
+              </div>
+              <p class="mt-6 leading-7 text-slate-600 dark:text-slate-300">
+                Took on a student coordinator role at Amity University’s AURA fest—an opportunity to contribute to campus life, work with others, and build leadership and collaboration experience.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" class="border-y border-slate-200/70 bg-white/55 py-16 dark:border-white/10 dark:bg-white/[0.02]">
+        <div class="mx-auto grid max-w-6xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
+          <div class="reveal">
+            <p class="mono text-xs uppercase tracking-[0.18em] text-accent dark:text-mint">03 / My toolkit</p>
+            <h2 class="mt-4 text-3xl font-bold tracking-tight">Skills I work with</h2>
+            <p class="mt-3 max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">A growing toolkit across software development, data, and emerging technologies.</p>
+          </div>
+          <div class="reveal flex flex-wrap gap-2.5" style="transition-delay: 100ms">
+            <span class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium dark:border-white/10 dark:bg-white/5">Java</span>
+            <span class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium dark:border-white/10 dark:bg-white/5">Python</span>
+            <span class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium dark:border-white/10 dark:bg-white/5">HTML</span>
+            <span class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium dark:border-white/10 dark:bg-white/5">CSS</span>
+            <span class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium dark:border-white/10 dark:bg-white/5">MySQL</span>
+            <span class="rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-medium text-accent dark:border-violet-300/15 dark:bg-violet-300/10 dark:text-violet-200">Spring Boot</span>
+            <span class="rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-medium text-accent dark:border-violet-300/15 dark:bg-violet-300/10 dark:text-violet-200">Bootstrap</span>
+            <span class="rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-medium text-accent dark:border-violet-300/15 dark:bg-violet-300/10 dark:text-violet-200">Git</span>
+            <span class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-medium text-emerald-800 dark:border-emerald-300/15 dark:bg-emerald-300/10 dark:text-emerald-200">Machine learning</span>
+            <span class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-medium text-emerald-800 dark:border-emerald-300/15 dark:bg-emerald-300/10 dark:text-emerald-200">Artificial intelligence</span>
+            <span class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium dark:border-white/10 dark:bg-white/5">Jupyter Notebook</span>
+            <span class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium dark:border-white/10 dark:bg-white/5">Docker</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="scroll-mt-24 py-20 sm:py-24">
+        <div class="mx-auto max-w-6xl px-5 sm:px-8">
+          <div class="reveal flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <p class="mono text-xs uppercase tracking-[0.18em] text-accent dark:text-mint">04 / Things I’ve built</p>
+              <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Selected projects</h2>
+            </div>
+            <p class="max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">A machine-learning project and a new idea currently taking shape.</p>
+          </div>
+          <div class="mt-10 grid gap-5 lg:grid-cols-2">
+            <article class="project-card reveal overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm hover:shadow-xl hover:shadow-violet-900/5 dark:border-white/10 dark:bg-white/[0.035] dark:hover:shadow-black/20">
+              <div class="relative overflow-hidden bg-[#eeecff] p-7 dark:bg-[#232238] sm:p-8">
+                <div class="absolute -right-7 -top-12 h-48 w-48 rounded-full border border-accent/15" aria-hidden="true"></div>
+                <div class="absolute -right-1 -top-6 h-48 w-48 rounded-full border border-accent/15" aria-hidden="true"></div>
+                <div class="relative flex items-start justify-between">
+                  <span class="grid h-12 w-12 place-items-center rounded-2xl bg-white text-accent shadow-sm dark:bg-white/10 dark:text-mint">
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v-2a8 8 0 0 1 16 0v2M3 16h4v5H5a2 2 0 0 1-2-2v-3Zm18 0h-4v5h2a2 2 0 0 0 2-2v-3ZM7 10l1.3-3h7.4L17 10" /></svg>
+                  </span>
+                  <span class="mono rounded-full bg-white/80 px-3 py-1.5 text-[10px] uppercase tracking-wider text-accent dark:bg-white/10 dark:text-violet-200">Computer vision</span>
+                </div>
+                <div class="relative mt-8 flex h-24 items-end gap-2" aria-hidden="true">
+                  <div class="h-10 w-10 rounded-t-xl border-2 border-dashed border-accent/40"></div>
+                  <div class="h-16 w-16 rounded-t-2xl border-2 border-accent/45"></div>
+                  <div class="h-20 w-24 rounded-t-[2rem] border-[3px] border-accent/60"></div>
+                  <div class="h-16 w-16 rounded-t-2xl border-2 border-accent/45"></div>
+                  <div class="h-10 w-10 rounded-t-xl border-2 border-dashed border-accent/40"></div>
+                  <span class="absolute bottom-7 left-1/2 -translate-x-1/2 rounded-md bg-mint px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-800">Helmet detected</span>
+                </div>
+              </div>
+              <div class="p-7 sm:p-8">
+                <div class="flex items-center gap-2">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                  <span class="mono text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Completed project</span>
+                </div>
+                <h3 class="mt-3 text-xl font-bold tracking-tight">Helmet Detection Management System</h3>
+                <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  A Python-based computer-vision project that identifies whether a motorcycle rider is wearing a helmet. Designed around a potential traffic-police use case to support helmet monitoring.
+                </p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <span class="rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600 dark:bg-white/[0.07] dark:text-slate-300">Python</span>
+                  <span class="rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600 dark:bg-white/[0.07] dark:text-slate-300">Jupyter Notebook</span>
+                  <span class="rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600 dark:bg-white/[0.07] dark:text-slate-300">Docker</span>
+                </div>
+                <button type="button" class="project-details mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent transition hover:gap-3 dark:text-mint" data-project="helmet">
+                  More about this project
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6" /></svg>
+                </button>
+              </div>
+            </article>
+
+            <article class="project-card reveal overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm hover:shadow-xl hover:shadow-emerald-900/5 dark:border-white/10 dark:bg-white/[0.035] dark:hover:shadow-black/20" style="transition-delay: 100ms">
+              <div class="relative overflow-hidden bg-[#e5f8f0] p-7 dark:bg-[#20332d] sm:p-8">
+                <div class="absolute -right-7 -top-12 h-48 w-48 rounded-full border border-emerald-700/15 dark:border-mint/15" aria-hidden="true"></div>
+                <div class="absolute -right-1 -top-6 h-48 w-48 rounded-full border border-emerald-700/15 dark:border-mint/15" aria-hidden="true"></div>
+                <div class="relative flex items-start justify-between">
+                  <span class="grid h-12 w-12 place-items-center rounded-2xl bg-white text-emerald-700 shadow-sm dark:bg-white/10 dark:text-mint">
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m3 8 9-5 9 5-9 5-9-5Zm0 0v9l9 5 9-5V8M12 13v9" /></svg>
+                  </span>
+                  <span class="mono rounded-full bg-white/80 px-3 py-1.5 text-[10px] uppercase tracking-wider text-emerald-800 dark:bg-white/10 dark:text-mint">In progress</span>
+                </div>
+                <div class="relative mt-8 grid h-24 grid-cols-4 gap-2" aria-hidden="true">
+                  <div class="rounded-xl border border-emerald-800/15 bg-white/65 p-2 dark:border-mint/15 dark:bg-white/5"><span class="block h-2 w-5 rounded bg-emerald-300"></span><span class="mt-4 block h-2 w-8 rounded bg-emerald-200"></span></div>
+                  <div class="rounded-xl border border-emerald-800/15 bg-white/65 p-2 dark:border-mint/15 dark:bg-white/5"><span class="block h-2 w-7 rounded bg-violet-300"></span><span class="mt-4 block h-2 w-5 rounded bg-violet-200"></span></div>
+                  <div class="rounded-xl border border-emerald-800/15 bg-white/65 p-2 dark:border-mint/15 dark:bg-white/5"><span class="block h-2 w-6 rounded bg-amber-300"></span><span class="mt-4 block h-2 w-8 rounded bg-amber-200"></span></div>
+                  <div class="rounded-xl border border-emerald-800/15 bg-white/65 p-2 dark:border-mint/15 dark:bg-white/5"><span class="block h-2 w-5 rounded bg-sky-300"></span><span class="mt-4 block h-2 w-6 rounded bg-sky-200"></span></div>
+                </div>
+              </div>
+              <div class="p-7 sm:p-8">
+                <div class="flex items-center gap-2">
+                  <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400"></span>
+                  <span class="mono text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Currently building</span>
+                </div>
+                <h3 class="mt-3 text-xl font-bold tracking-tight">Supermarket Inventory Management</h3>
+                <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  A work-in-progress project idea: an inventory management system for supermarket managers, focused on making day-to-day inventory handling more organized.
+                </p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <span class="rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600 dark:bg-white/[0.07] dark:text-slate-300">Software development</span>
+                  <span class="rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600 dark:bg-white/[0.07] dark:text-slate-300">Inventory</span>
+                  <span class="rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600 dark:bg-white/[0.07] dark:text-slate-300">In progress</span>
+                </div>
+                <button type="button" class="project-details mt-6 inline-flex items-center gap-2 text-sm font-semibold text-emerald-800 transition hover:gap-3 dark:text-mint" data-project="inventory">
+                  More about this project
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6" /></svg>
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="research" class="scroll-mt-24 border-y border-slate-200/70 bg-white/55 py-20 dark:border-white/10 dark:bg-white/[0.02] sm:py-24">
+        <div class="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+          <div class="reveal">
+            <p class="mono text-xs uppercase tracking-[0.18em] text-accent dark:text-mint">05 / Research &amp; recognition</p>
+            <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Ideas beyond<br />the classroom.</h2>
+          </div>
+          <article class="reveal rounded-3xl border border-slate-200/80 bg-white p-7 dark:border-white/10 dark:bg-white/[0.035] sm:p-9" style="transition-delay: 100ms">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <span class="rounded-full bg-violet-50 px-3 py-1.5 text-xs font-semibold text-accent dark:bg-violet-300/10 dark:text-violet-200">Conference paper · IEEE</span>
+              <span class="mono text-xs text-slate-500 dark:text-slate-400">IC3SE/24/P/1143</span>
+            </div>
+            <h3 class="mt-6 text-2xl font-bold leading-snug tracking-tight">
+              “Sensor-driven Smart Environments: Enabling Technologies for IoT Applications”
+            </h3>
+            <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-300">
+              Published conference paper exploring sensor-driven smart environments and the enabling technologies behind Internet of Things applications.
+            </p>
+            <div class="mt-7 flex items-center gap-3 border-t border-slate-100 pt-5 dark:border-white/10">
+              <span class="grid h-10 w-10 place-items-center rounded-xl bg-slate-50 text-accent dark:bg-white/5 dark:text-mint" aria-hidden="true">✎</span>
+              <div>
+                <p class="text-sm font-semibold">Research publication</p>
+                <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Reference number IC3SE/24/P/1143</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact" class="scroll-mt-24 px-5 py-20 sm:px-8 sm:py-28">
+        <div class="reveal relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-[#1b1a35] px-7 py-12 text-white sm:px-12 sm:py-16">
+          <div class="absolute -right-10 -top-28 h-80 w-80 rounded-full border border-white/10" aria-hidden="true"></div>
+          <div class="absolute -right-1 -top-20 h-80 w-80 rounded-full border border-white/10" aria-hidden="true"></div>
+          <div class="relative grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+            <div>
+              <p class="mono text-xs uppercase tracking-[0.18em] text-mint">Have an opportunity in mind?</p>
+              <h2 class="mt-4 max-w-xl text-3xl font-bold tracking-tight sm:text-5xl">Let’s build something meaningful.</h2>
+              <p class="mt-4 max-w-lg text-sm leading-7 text-slate-300">I’m always happy to connect, talk about technology, and explore new opportunities.</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <a href="https://www.linkedin.com/in/sarthak-singh-202a97264/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-xl bg-[#6258e8] px-5 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#5147d3]">
+                Connect on LinkedIn
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 3.55A2.1 2.1 0 0 0 18.95 3H5.05a2.1 2.1 0 0 0-2.1 2.05v13.9A2.1 2.1 0 0 0 5.05 21h13.9a2.1 2.1 0 0 0 2.1-2.05V5.05a2.1 2.1 0 0 0-.6-1.5ZM8.34 18.1H5.68V9.5h2.66v8.6ZM7.01 8.33a1.54 1.54 0 1 1 .02-3.08 1.54 1.54 0 0 1-.02 3.08Zm11.3 9.77h-2.65v-4.18c0-1-.02-2.29-1.4-2.29-1.4 0-1.61 1.09-1.61 2.22v4.25H10V9.5h2.54v1.18h.04a2.79 2.79 0 0 1 2.5-1.37c2.68 0 3.18 1.76 3.18 4.05v4.74Z" /></svg>
+              </a>
+              <a href="https://github.com/Sarthak9131" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-xl border border-white/20 px-5 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/10">
+                Visit GitHub
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.54v-2.08c-3.09.67-3.74-1.31-3.74-1.31-.5-1.28-1.23-1.62-1.23-1.62-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 1.7 2.62 1.21 3.26.92.1-.72.39-1.21.71-1.49-2.47-.28-5.07-1.24-5.07-5.5 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.06 1.14a10.63 10.63 0 0 1 5.57 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.53.23 2.67.12 2.95.72.78 1.14 1.77 1.14 2.99 0 4.27-2.6 5.21-5.08 5.49.4.35.76 1.02.76 2.06v3.06c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z" /></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-200/70 dark:border-white/10">
+      <div class="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-6 text-xs text-slate-500 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <p>© <span id="current-year"></span> Sarthak Singh. Made with curiosity and code.</p>
+        <a href="#home" class="inline-flex items-center gap-1.5 transition hover:text-accent dark:hover:text-mint">Back to top <span aria-hidden="true">↑</span></a>
+      </div>
+    </footer>
+
+    <dialog id="project-dialog" class="w-[min(92vw,36rem)] rounded-3xl border border-slate-200 bg-white p-0 text-ink shadow-2xl backdrop:bg-slate-950/50 dark:border-white/10 dark:bg-[#1b1e29] dark:text-[#edf0f7]">
+      <div class="p-7 sm:p-9">
+        <div class="flex items-start justify-between gap-5">
+          <div>
+            <p id="dialog-eyebrow" class="mono text-xs uppercase tracking-[0.16em] text-accent dark:text-mint"></p>
+            <h2 id="dialog-title" class="mt-3 text-2xl font-bold tracking-tight"></h2>
+          </div>
+          <button id="dialog-close" type="button" class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-100 text-slate-600 transition hover:bg-slate-200 dark:bg-white/10 dark:text-slate-200 dark:hover:bg-white/15" aria-label="Close project details">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" d="m6 6 12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+        <p id="dialog-description" class="mt-5 text-sm leading-7 text-slate-600 dark:text-slate-300"></p>
+        <div id="dialog-tags" class="mt-6 flex flex-wrap gap-2"></div>
+      </div>
+    </dialog>
+    </div>
+
+    <script>
+      if (window.self !== window.top) {
+        document.body.classList.add("preview-frame");
+      }
+
+      const desktopPreviewButton = document.getElementById(
+        "desktop-preview-button",
+      );
+      const mobilePreviewButton = document.getElementById(
+        "mobile-preview-button",
+      );
+      const mobilePreviewFrame = document.getElementById(
+        "mobile-preview-frame",
+      );
+
+      const setPreviewMode = (mode) => {
+        const isMobile = mode === "mobile";
+        document.body.classList.toggle("previewing", isMobile);
+        desktopPreviewButton.setAttribute("aria-pressed", String(!isMobile));
+        mobilePreviewButton.setAttribute("aria-pressed", String(isMobile));
+        desktopPreviewButton.classList.toggle("bg-accent", !isMobile);
+        desktopPreviewButton.classList.toggle("text-white", !isMobile);
+        desktopPreviewButton.classList.toggle("text-slate-600", isMobile);
+        mobilePreviewButton.classList.toggle("bg-accent", isMobile);
+        mobilePreviewButton.classList.toggle("text-white", isMobile);
+        mobilePreviewButton.classList.toggle("text-slate-600", !isMobile);
+
+        if (isMobile && !mobilePreviewFrame.src) {
+          mobilePreviewFrame.src = window.location.href.split("#")[0];
+        }
+      };
+
+      desktopPreviewButton.addEventListener("click", () => {
+        setPreviewMode("desktop");
+      });
+      mobilePreviewButton.addEventListener("click", () => {
+        setPreviewMode("mobile");
+      });
+
+      const root = document.documentElement;
+      const themeToggle = document.getElementById("theme-toggle");
+      const menuToggle = document.getElementById("menu-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const dialog = document.getElementById("project-dialog");
+      const projects = {
+        helmet: {
+          eyebrow: "Completed project · Computer vision",
+          title: "Helmet Detection Management System",
+          description:
+            "Built a Python-based helmet detection project in Jupyter Notebook, with Docker included in the toolkit. The system identifies whether a rider is wearing a helmet and explores how helmet monitoring could support traffic-police operations.",
+          tags: ["Python", "Jupyter Notebook", "Docker", "Helmet detection"],
+        },
+        inventory: {
+          eyebrow: "Work in progress · Supermarket operations",
+          title: "Supermarket Inventory Management",
+          description:
+            "An ongoing project to build an inventory management system for supermarket managers. The goal is to make inventory handling more organized; the project is still in development.",
+          tags: ["In progress", "Supermarket", "Inventory management"],
+        },
+      };
+
+      themeToggle.addEventListener("click", () => {
+        const isDark = root.classList.toggle("dark");
+        themeToggle.setAttribute(
+          "aria-label",
+          isDark ? "Switch to light theme" : "Switch to dark theme",
+        );
+        try {
+          localStorage.setItem("sarthak-portfolio-theme", isDark ? "dark" : "light");
+        } catch {
+          // Theme switching still works for the current page.
+        }
+      });
+
+      menuToggle.addEventListener("click", () => {
+        const isExpanded = menuToggle.getAttribute("aria-expanded") === "true";
+        menuToggle.setAttribute("aria-expanded", String(!isExpanded));
+        menuToggle.setAttribute(
+          "aria-label",
+          isExpanded ? "Open navigation menu" : "Close navigation menu",
+        );
+        mobileMenu.classList.toggle("hidden", isExpanded);
+      });
+
+      document.querySelectorAll(".mobile-link").forEach((link) => {
+        link.addEventListener("click", () => {
+          menuToggle.setAttribute("aria-expanded", "false");
+          menuToggle.setAttribute("aria-label", "Open navigation menu");
+          mobileMenu.classList.add("hidden");
+        });
+      });
+
+      document.querySelectorAll(".project-details").forEach((button) => {
+        button.addEventListener("click", () => {
+          const project = projects[button.dataset.project];
+          if (!project) return;
+          document.getElementById("dialog-eyebrow").textContent = project.eyebrow;
+          document.getElementById("dialog-title").textContent = project.title;
+          document.getElementById("dialog-description").textContent =
+            project.description;
+          const tags = document.getElementById("dialog-tags");
+          tags.replaceChildren(
+            ...project.tags.map((tag) => {
+              const chip = document.createElement("span");
+              chip.className =
+                "rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600 dark:bg-white/[0.07] dark:text-slate-300";
+              chip.textContent = tag;
+              return chip;
+            }),
+          );
+          dialog.showModal();
+        });
+      });
+
+      document.getElementById("dialog-close").addEventListener("click", () => {
+        dialog.close();
+      });
+
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+
+      const revealObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 },
+      );
+      document.querySelectorAll(".reveal").forEach((element) => {
+        revealObserver.observe(element);
+      });
+      document.querySelector("#home .reveal").classList.add("visible");
+
+      const progress = document.getElementById("reading-progress");
+      const updateProgress = () => {
+        const scrollableHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const percentage =
+          scrollableHeight > 0 ? (window.scrollY / scrollableHeight) * 100 : 0;
+        progress.style.width = `${percentage}%`;
+      };
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      window.addEventListener("resize", updateProgress);
+      updateProgress();
+    </script>
+  </body>
+</html>
